@@ -6,7 +6,7 @@ on:
 env:
   TARGET: mediatek
   SUBTARGET: filogic
-  PROFILE: asus_tuf-ax4200q
+  PROFILE: cudy_tr3000-v1
   DOWNLOAD_BASE: https://downloads.immortalwrt.org/snapshots/targets/mediatek/filogic
 
 permissions:
@@ -183,7 +183,7 @@ jobs:
 
           # UCI 기본값 설정
           cat << 'EOF' > imagebuilder/files/etc/uci-defaults/99-custom
-          uci set system.@system[0].hostname='ASUS_VPNBOX'
+          uci set system.@system[0].hostname='CUDY_VPNBOX'
           uci set luci.main.lang='ko'
           uci set luci.main.mediaurlbase='/luci-static/alpha'
           uci commit luci
@@ -256,7 +256,7 @@ jobs:
           cp -a *.manifest /tmp/release_files/ 2>/dev/null || true
           cp -a sha256sums /tmp/release_files/ 2>/dev/null || true
 
-          TAG_NAME="ImmortalWrt-ASUS-TUF-AX4200Q-$(date +'%Y.%m.%d-%H%M')"
+          TAG_NAME="ImmortalWrt-CUDY-TR3000-V1-$(date +'%Y.%m.%d-%H%M')"
           echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
           echo "RELEASE_PATH=/tmp/release_files" >> $GITHUB_OUTPUT
 
