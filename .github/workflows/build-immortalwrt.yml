@@ -7,7 +7,7 @@ env:
   TARGET: mediatek
   SUBTARGET: filogic
   PROFILE: cudy_tr3000-v1
-  DOWNLOAD_BASE: https://downloads.immortalwrt.org/releases/24.10.6/targets/mediatek/filogic
+  DOWNLOAD_BASE: https://downloads.immortalwrt.org/snapshots/targets/mediatek/filogic
 
 permissions:
   contents: write
