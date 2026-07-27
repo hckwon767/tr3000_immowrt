@@ -1,4 +1,4 @@
-name: Build ImmortalWrt for ASUS TUF-AX4200Q (SDK + ImageBuilder)
+name: Build ImmortalWrt for CUDY TR3000 (SDK + ImageBuilder)
 
 on:
   workflow_dispatch:
@@ -62,7 +62,7 @@ jobs:
 
           # brand.png 교체 (상단바 + 로그인화면)
           curl -L --retry 3 --fail \
-            "https://raw.githubusercontent.com/hckwon767/tuf4200q/refs/heads/main/brand.png" \
+            "https://raw.githubusercontent.com/hckwon767/tr3000_immowrt/refs/heads/main/brand.png" \
             -o /tmp/brand.png
           cp /tmp/brand.png package/luci-theme-alpha/luasrc/brand.png
           cp /tmp/brand.png package/luci-theme-alpha/luasrc/style/brand.png
