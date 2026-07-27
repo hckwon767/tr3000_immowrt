@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   # ──────────────────────────────────────────────
-  # JOB 1: SDK로 커스텀 패키지만 컴파일 (bandix, alpha 테마)
+  # JOB 1: SDK로 커스텀 패키지만 컴파일 (alpha 테마)
   # OpenClash는 공식 사전 빌드 apk를 그대로 사용 (libffi 이슈 회피)
   # ──────────────────────────────────────────────
   build-custom-packages:
@@ -67,17 +67,10 @@ jobs:
           cp /tmp/brand.png package/luci-theme-alpha/luasrc/brand.png
           cp /tmp/brand.png package/luci-theme-alpha/luasrc/style/brand.png
 
-          # Bandix
-          rm -rf package/luci-app-bandix package/openwrt-bandix
-          git clone --depth 1 https://github.com/timsaya/luci-app-bandix package/luci-app-bandix
-          git clone --depth 1 https://github.com/timsaya/openwrt-bandix package/openwrt-bandix
-
-      - name: Compile Custom Packages Only (bandix, alpha 테마만)
+      - name: Compile Custom Packages Only (alpha 테마만)
         run: |
           cd sdk
           make defconfig
-          make package/luci-app-bandix/compile V=s -j$(nproc)
-          make package/openwrt-bandix/compile V=s -j$(nproc)
           make package/luci-theme-alpha/compile V=s -j$(nproc)
           make package/luci-app-alpha-config/compile V=s -j$(nproc)
 
@@ -102,7 +95,7 @@ jobs:
       - name: Collect Built Packages
         run: |
           find sdk/bin/packages -type f \( -name "*.apk" -o -name "*.ipk" \) \
-            \( -iname "*bandix*" -o -iname "*alpha*" \) \
+            -iname "*alpha*" \
             -exec cp -v {} /tmp/custom-packages/ \;
           ls -la /tmp/custom-packages/
           tar -czf custom-packages.tar.gz -C /tmp custom-packages
@@ -191,6 +184,9 @@ jobs:
           uci set firewall.@defaults[0].flow_offloading='1'
           uci set firewall.@defaults[0].flow_offloading_hw='1'
           uci commit firewall
+
+          # zashboard만 사용하므로 OpenClash 기본 번들 UI(metacubexd)는 첫 부팅 시 제거
+          rm -rf /usr/share/openclash/ui/metacubexd
           exit 0
           EOF
           chmod +x imagebuilder/files/etc/uci-defaults/99-custom
@@ -220,7 +216,7 @@ jobs:
               luci-theme-argon luci-theme-alpha luci-app-alpha-config \
               default-settings-chn \
               luci-i18n-base-ko luci-i18n-firewall-ko luci-i18n-ttyd-ko \
-              luci-i18n-hd-idle-ko luci-i18n-upnp-ko luci-i18n-sqm-ko \
+              luci-i18n-upnp-ko luci-i18n-sqm-ko \
               luci-i18n-attendedsysupgrade-ko luci-i18n-dashboard-ko luci-i18n-ddns-ko \
               luci-app-package-manager luci-i18n-package-manager-ko \
               luci-mod-dashboard luci-app-ttyd luci-app-attendedsysupgrade \
@@ -232,14 +228,10 @@ jobs:
               coreutils coreutils-nohup bash curl wget-ssl ca-certificates ca-bundle \
               ipset ip-full iptables iptables-nft iptables-mod-tproxy iptables-mod-extra \
               kmod-ipt-tproxy kmod-nft-tproxy jq jsonfilter \
-              lm-sensors collectd-mod-sensors collectd kmod-usb3 kmod-usb-storage \
+              lm-sensors collectd-mod-sensors collectd \
               kmod-nft-offload \
-              luci-app-bandix \
-              block-mount automount kmod-fs-ext4 kmod-fs-vfat kmod-fs-exfat \
-              kmod-nls-cp437 kmod-nls-utf8 kmod-fs-ntfs3 \
               zram-swap \
-              ethtool iperf3 libiperf3 usbutils usbids kmod-usb-printer \
-              smartmontools smartmontools-drivedb hd-idle luci-app-hd-idle luci-app-diskman \
+              ethtool \
             " \
             FILES="files" \
             EXTRA_IMAGE_NAME="ko-custom"
